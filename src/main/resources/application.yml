@@ -7,7 +7,8 @@ spring:
     url: jdbc:mysql://localhost:3306/acgp?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     username: root
     password: z200209255
-
+  profiles:
+    active: local
 server:
   port: 8123
   servlet:
