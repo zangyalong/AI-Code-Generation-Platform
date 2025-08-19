@@ -33,6 +33,5 @@ class AiCodeGeneratorFacadeTest {
         String completeContent = String.join("", result);
         Assertions.assertNotNull(completeContent);
     }
-
 }
 
