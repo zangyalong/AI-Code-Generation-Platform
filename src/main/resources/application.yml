@@ -7,6 +7,13 @@ spring:
     url: jdbc:mysql://localhost:3306/acgp?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     username: root
     password: z200209255
+  # redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      ttl: 3600
   profiles:
     active: local
 server:

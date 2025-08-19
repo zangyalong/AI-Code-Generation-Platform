@@ -1,13 +1,15 @@
 package com.zangyalong.aicodegenerationplatform;
 
+import dev.langchain4j.community.store.embedding.redis.spring.RedisEmbeddingStoreAutoConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
+
 @MapperScan("com.zangyalong.aicodegenerationplatform.mapper")
 @EnableAspectJAutoProxy(exposeProxy = true)
-@SpringBootApplication
+@SpringBootApplication(exclude = {RedisEmbeddingStoreAutoConfiguration.class})
 public class AiCodeGenerationPlatformApplication {
 
 	public static void main(String[] args) {
