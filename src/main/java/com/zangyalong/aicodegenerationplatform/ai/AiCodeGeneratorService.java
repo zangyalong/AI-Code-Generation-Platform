@@ -2,6 +2,7 @@ package com.zangyalong.aicodegenerationplatform.ai;
 
 import com.zangyalong.aicodegenerationplatform.ai.model.HtmlCodeResult;
 import com.zangyalong.aicodegenerationplatform.ai.model.MultiFileCodeResult;
+import com.zangyalong.aicodegenerationplatform.model.enums.CodeGenTypeEnum;
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.TokenStream;

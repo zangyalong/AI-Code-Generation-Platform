@@ -2,6 +2,7 @@ package com.zangyalong.aicodegenerationplatform.service;
 
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
+import com.zangyalong.aicodegenerationplatform.model.dto.app.AppAddRequest;
 import com.zangyalong.aicodegenerationplatform.model.dto.app.AppQueryRequest;
 import com.zangyalong.aicodegenerationplatform.model.entity.App;
 import com.zangyalong.aicodegenerationplatform.model.entity.User;
@@ -28,4 +29,6 @@ public interface AppService extends IService<App> {
     public String deployApp(Long appId, User loginUser);
 
     public void generateAppScreenshotAsync(Long appId, String appUrl);
+
+    public Long createApp(AppAddRequest appAddRequest, User loginUser);
 }

@@ -2,7 +2,7 @@ package com.zangyalong.aicodegenerationplatform.ai;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.zangyalong.aicodegenerationplatform.ai.tools.FileWriteTool;
+import com.zangyalong.aicodegenerationplatform.ai.tools.*;
 import com.zangyalong.aicodegenerationplatform.exception.BusinessException;
 import com.zangyalong.aicodegenerationplatform.exception.ErrorCode;
 import com.zangyalong.aicodegenerationplatform.model.entity.ChatHistory;
@@ -42,6 +42,9 @@ public class AiCodeGeneratorServiceFactory {
 
     @Resource
     private StreamingChatModel reasoningStreamingChatModel;
+
+    @Resource
+    private ToolManager toolManager;
 
 //    @Bean
 //    public AiCodeGeneratorService aiCodeGeneratorService() {
@@ -142,7 +145,7 @@ public class AiCodeGeneratorServiceFactory {
             case VUE_PROJECT -> AiServices.builder(AiCodeGeneratorService.class)
                     .streamingChatModel(reasoningStreamingChatModel)
                     .chatMemoryProvider(memoryId -> chatMemory)
-                    .tools(new FileWriteTool())
+                    .tools(toolManager.getAllTools())
                     .hallucinatedToolNameStrategy(toolExecutionRequest -> ToolExecutionResultMessage.from(
                             toolExecutionRequest, "Error: there is no tool called " + toolExecutionRequest.name()
                     ))
@@ -156,5 +159,15 @@ public class AiCodeGeneratorServiceFactory {
             default -> throw new BusinessException(ErrorCode.SYSTEM_ERROR,
                     "不支持的代码生成类型: " + codeGenType.getValue());
         };
+    }
+
+    /**
+     * 创建AI代码生成类型路由服务实例
+     */
+    @Bean
+    public AiCodeGenTypeRoutingService aiCodeGenTypeRoutingService() {
+        return AiServices.builder(AiCodeGenTypeRoutingService.class)
+                .chatModel(chatModel)
+                .build();
     }
 }
