@@ -82,7 +82,19 @@
 
     1、通过策略模式 + 工厂模式 + Spring依赖注入优化具体工具类实现
 
-## 第十三次提交 AI工作流 - 核心工作流开发
+## 第十三次提交 AI工作流1 - 核心工作流开发
 
     1、定义工作节点 + 工作流图应用工作节点
     2、图片收集节点开发 & 图片收集AI服务 & 工作节点开发
+| 工作步骤 | 输入状态 | 输出状态 |
+|------|--|------|
+| 图片收集 | originalPrompt 原始提示词 | images 图片资源列表每一个图片都应该是对象结构（图片类别、描述、地址）图片类别：content 内容图片URLsillustration 插画图片URLsarchitecture 架构图URLlogo Logo图片URL |
+| 提示词增强 | originalPrompt 原始提示؜词 images 图片资源 | enhancedPrompt 增强后的提示词，包含图片描述和引用 |
+| 智能路由 | originalPromptenhancedPrompt 增强后的提示词 | generationType 生成类型 |
+| 代码生成 | enhancedPromptgenerationType 生成类型images | generatedCodeDir 生成的代码目录 |
+| 项目构建 | generatedCodeDir 生成的代码目录 | buildResultDir 构建成功的目录 |
+
+## 第十四次提交 AI工作流2 - 真实节点构建
+
+    1、图片收集节点、提示词增强节点等五个节点的业务开发 & 工作流使用工作节点
+    2、利用LangGraph4j 工作流特性 - 条件边
