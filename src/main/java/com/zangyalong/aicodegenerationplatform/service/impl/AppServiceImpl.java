@@ -15,6 +15,7 @@ import com.zangyalong.aicodegenerationplatform.core.handler.StreamHandlerExecuto
 import com.zangyalong.aicodegenerationplatform.exception.BusinessException;
 import com.zangyalong.aicodegenerationplatform.exception.ErrorCode;
 import com.zangyalong.aicodegenerationplatform.exception.ThrowUtils;
+import com.zangyalong.aicodegenerationplatform.langgraph4j.CodeGenWorkflow;
 import com.zangyalong.aicodegenerationplatform.model.dto.app.AppAddRequest;
 import com.zangyalong.aicodegenerationplatform.model.dto.app.AppQueryRequest;
 import com.zangyalong.aicodegenerationplatform.model.entity.App;
@@ -135,7 +136,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>  implements AppS
     }
 
     @Override
-    public Flux<String> chatToGenCode(Long appId, String message, User loginUser) {
+    public Flux<String> chatToGenCode(Long appId, String message, User loginUser, boolean agent) {
         ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用 ID 不能为空");
         ThrowUtils.throwIf(StrUtil.isBlank(message), ErrorCode.PARAMS_ERROR, "用户消息不能为空");
 
@@ -153,9 +154,18 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>  implements AppS
         }
         // 对话历史模块新增：
         chatHistoryService.addChatMessage(appId, message, ChatHistoryMessageTypeEnum.USER.getValue(), loginUser.getId());
-        Flux<String> codeStream = aiCodeGeneratorFacade.generateAndSaveCodeStream(message, codeGenTypeEnum, appId);
-        // 7. 收集 AI 响应内容并在完成后记录到对话历史
-        return streamHandlerExecutor.doExecute(codeStream, chatHistoryService, appId, loginUser, codeGenTypeEnum);
+        Flux<String> codeStream;
+        if (agent) {
+            // Agent 模式：使用工作流生成代码，工作流已经返回正确的 SSE 格式，无需进一步处理
+            codeStream = new CodeGenWorkflow().executeWorkflowWithFlux(message, appId);
+            // Agent 模式直接返回，不需要通过 streamHandlerExecutor 处理
+            return codeStream;
+        } else {
+            // 传统模式：调用 AI 生成代码（流式）
+            codeStream = aiCodeGeneratorFacade.generateAndSaveCodeStream(message, codeGenTypeEnum, appId);
+            // 收集 AI 响应内容并在完成后记录到对话历史
+            return streamHandlerExecutor.doExecute(codeStream, chatHistoryService, appId, loginUser, codeGenTypeEnum);
+        }
     }
 
     @Override

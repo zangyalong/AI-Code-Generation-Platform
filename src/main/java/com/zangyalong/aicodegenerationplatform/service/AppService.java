@@ -24,7 +24,7 @@ public interface AppService extends IService<App> {
 
     public List<AppVO> getAppVOList(List<App> appList);
 
-    public Flux<String> chatToGenCode(Long appId, String message, User loginUser);
+    public Flux<String> chatToGenCode(Long appId, String message, User loginUser, boolean agent);
 
     public String deployApp(Long appId, User loginUser);
 

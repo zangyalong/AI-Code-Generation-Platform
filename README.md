@@ -98,3 +98,8 @@
 
     1、图片收集节点、提示词增强节点等五个节点的业务开发 & 工作流使用工作节点
     2、利用LangGraph4j 工作流特性 - 条件边
+
+## 第十四次提交 AI工作流3 - LangGraph4j 工作流特性实战
+
+    1、用循环边实现质量检查、 图片收集优化（CompletableFuture并发）
+    2、Flux实现流式输出、appservice中添加agent参数整合工作流

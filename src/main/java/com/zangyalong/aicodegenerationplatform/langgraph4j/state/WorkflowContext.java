@@ -1,5 +1,6 @@
 package com.zangyalong.aicodegenerationplatform.langgraph4j.state;
 
+import com.zangyalong.aicodegenerationplatform.langgraph4j.model.QualityResult;
 import com.zangyalong.aicodegenerationplatform.model.enums.CodeGenTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,16 @@ public class WorkflowContext implements Serializable {
     private String originalPrompt;
 
     private String imageListStr;
+
+    /**
+     * 应用 ID
+     */
+    private Long appId = 0L;
+
+    /**
+     * 质量检查结果
+     */
+    private QualityResult qualityResult;
 
     /**
      * 图片资源列表
