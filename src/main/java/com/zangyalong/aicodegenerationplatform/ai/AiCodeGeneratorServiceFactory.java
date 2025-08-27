@@ -2,6 +2,8 @@ package com.zangyalong.aicodegenerationplatform.ai;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.zangyalong.aicodegenerationplatform.ai.guardrail.PromptSafetyInputGuardrail;
+import com.zangyalong.aicodegenerationplatform.ai.guardrail.RetryOutputGuardrail;
 import com.zangyalong.aicodegenerationplatform.ai.tools.*;
 import com.zangyalong.aicodegenerationplatform.exception.BusinessException;
 import com.zangyalong.aicodegenerationplatform.exception.ErrorCode;
@@ -11,6 +13,7 @@ import com.zangyalong.aicodegenerationplatform.service.ChatHistoryService;
 import com.zangyalong.aicodegenerationplatform.utils.SpringContextUtil;
 import dev.langchain4j.community.store.memory.chat.redis.RedisChatMemoryStore;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
+import dev.langchain4j.guardrail.config.OutputGuardrailsConfig;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
@@ -41,6 +44,9 @@ public class AiCodeGeneratorServiceFactory {
     @Resource
     private ToolManager toolManager;
 
+    OutputGuardrailsConfig outputGuardrailsConfig = OutputGuardrailsConfig.builder()
+            .maxRetries(3)
+            .build();
 //    @Bean
 //    public AiCodeGeneratorService aiCodeGeneratorService() {
 //        return AiServices.builder(AiCodeGeneratorService.class)
@@ -144,6 +150,10 @@ public class AiCodeGeneratorServiceFactory {
                         .streamingChatModel(reasoningStreamingChatModel)
                         .chatMemoryProvider(memoryId -> chatMemory)
                         .tools(toolManager.getAllTools())
+                        .inputGuardrails(new PromptSafetyInputGuardrail())  // 添加输入护轨
+                        .outputGuardrails(new RetryOutputGuardrail())       // 输出护轨
+                        //.outputGuardrailsConfig(outputGuardrailsConfig)
+                        .maxSequentialToolsInvocations(20)  // 最多连续调用 20 次工具
                         .hallucinatedToolNameStrategy(toolExecutionRequest -> ToolExecutionResultMessage.from(
                                 toolExecutionRequest, "Error: there is no tool called " + toolExecutionRequest.name()
                         ))
@@ -156,6 +166,10 @@ public class AiCodeGeneratorServiceFactory {
                         .chatModel(chatModel)
                         .streamingChatModel(openAiStreamingChatModel)
                         .chatMemory(chatMemory)
+                        .inputGuardrails(new PromptSafetyInputGuardrail())  // 添加输入护轨
+                        .outputGuardrails(new RetryOutputGuardrail())       // 输出护轨
+                        //.outputGuardrailsConfig(outputGuardrailsConfig)
+                        .maxSequentialToolsInvocations(20)  // 最多连续调用 20 次工具
                         .build();
             }
             default -> throw new BusinessException(ErrorCode.SYSTEM_ERROR,
