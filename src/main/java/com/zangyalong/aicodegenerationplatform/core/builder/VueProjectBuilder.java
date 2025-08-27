@@ -17,14 +17,12 @@ public class VueProjectBuilder {
      * @param projectPath 项目路径
      */
     public void buildProjectAsync(String projectPath) {
-        // 在单独的线程中执行构建，避免阻塞主流程 没有用到虚拟线程
-        new Thread(() -> {
-            try {
-                buildProject(projectPath);
-            } catch (Exception e) {
-                log.error("异步构建 Vue 项目时发生异常: {}", e.getMessage(), e);
-            }
-        }, "vue-builder-" + System.currentTimeMillis()).start();
+        // 同步构建，提高用户体验
+        try {
+            buildProject(projectPath);
+        } catch (Exception e) {
+            log.error("异步构建 Vue 项目时发生异常: {}", e.getMessage(), e);
+        }
     }
 
     /**

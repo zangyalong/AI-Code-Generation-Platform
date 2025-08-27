@@ -103,3 +103,9 @@
 
     1、用循环边实现质量检查、 图片收集优化（CompletableFuture并发）
     2、Flux实现流式输出、appservice中添加agent参数整合工作流
+
+## 第十五次提交 系统优化 - 性能优化 & 实时性优化
+
+    1、AI并发调用问题 - 通过chatModel多例模式解决：@Scope("prototype")
+    2、Redis缓存优化，通过Redis缓存注解 & Redis缓存管理配置类实现
+    3、在代码生成完成后，同步构建VUE项目，最后再返回完成结果

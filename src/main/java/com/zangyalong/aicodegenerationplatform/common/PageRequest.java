@@ -1,5 +1,6 @@
 package com.zangyalong.aicodegenerationplatform.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
@@ -8,6 +9,7 @@ public class PageRequest {
     /**
      * 当前页号
      */
+    @JsonProperty("pageNum")
     private int currentPage = 1;
 
     /**

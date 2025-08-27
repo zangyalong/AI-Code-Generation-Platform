@@ -2,10 +2,12 @@ package com.zangyalong.aicodegenerationplatform.common;
 
 import com.zangyalong.aicodegenerationplatform.exception.ErrorCode;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
+@NoArgsConstructor
 public class BaseResponse<T> implements Serializable {
 
     private int code;
