@@ -135,30 +135,38 @@ public class AiCodeGeneratorFacade {
      * @return Flux<String> 流式响应
      */
     private Flux<String> processTokenStream(TokenStream tokenStream, Long appId) {
+        log.info("开始处理TokenStream，appId: {}", appId);
         return Flux.create(sink -> {
             tokenStream.onPartialResponse((String partialResponse) -> {
+                        log.debug("收到部分响应: {}", partialResponse.substring(0, Math.min(100, partialResponse.length())));
                         AiResponseMessage aiResponseMessage = new AiResponseMessage(partialResponse);
                         sink.next(JSONUtil.toJsonStr(aiResponseMessage));
                     })
                     .onPartialToolExecutionRequest((index, toolExecutionRequest) -> {
+                        log.info("工具执行请求: {} - {}", index, toolExecutionRequest.name());
                         ToolRequestMessage toolRequestMessage = new ToolRequestMessage(toolExecutionRequest);
                         sink.next(JSONUtil.toJsonStr(toolRequestMessage));
                     })
                     .onToolExecuted((ToolExecution toolExecution) -> {
+                        log.info("工具执行完成:");
                         ToolExecutedMessage toolExecutedMessage = new ToolExecutedMessage(toolExecution);
                         sink.next(JSONUtil.toJsonStr(toolExecutedMessage));
                     })
                     .onCompleteResponse((ChatResponse response) -> {
-                        // 执行 Vue 项目构建（同步执行，确保预览时项目已就绪）
+                        log.info("TokenStream完成响应，appId: {}，开始构建项目", appId);
+                        // 执行 Vue 项目构建（同步执行，确保预览时项目已就绪）传统模式需要，但是ai工作流模式也无害
                         String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR + "/vue_project_" + appId;
                         vueProjectBuilder.buildProjectAsync(projectPath);
+                        log.info("调用sink.complete()，结束TokenStream，appId: {}", appId);
                         sink.complete();
                     })
                     .onError((Throwable error) -> {
+                        log.error("TokenStream出错，appId: {}, 错误: {}", appId, error.getMessage(), error);
                         error.printStackTrace();
                         sink.error(error);
                     })
                     .start();
+            log.info("TokenStream已启动，appId: {}", appId);
         });
     }
 

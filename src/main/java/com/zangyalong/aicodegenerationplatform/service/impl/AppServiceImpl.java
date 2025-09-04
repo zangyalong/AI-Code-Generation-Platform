@@ -159,8 +159,32 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>  implements AppS
         if (agent) {
             // Agent 模式：使用工作流生成代码，工作流已经返回正确的 SSE 格式，无需进一步处理
             codeStream = new CodeGenWorkflow().executeWorkflowWithFlux(message, appId);
-            // Agent 模式直接返回，不需要通过 streamHandlerExecutor 处理
-            return codeStream;
+            // Agent 模式需要收集实际的工作流输出信息保存到聊天历史
+            StringBuilder realWorkflowOutput = new StringBuilder();
+            
+            return codeStream.doOnNext(chunk -> {
+                // 收集所有返回给前端的信息
+                realWorkflowOutput.append(chunk);
+            }).doOnComplete(() -> {
+                // 工作流完成后，保存实际收集到的输出内容
+                String actualResponse = realWorkflowOutput.toString();
+                
+                // 可以选择直接保存原始输出，或者格式化一下
+                if (actualResponse.length() > 0) {
+                    // 保存实际的工作流输出
+                    chatHistoryService.addChatMessage(appId, actualResponse, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
+                } else {
+                    // 如果没有收集到内容，保存一个默认消息
+                    chatHistoryService.addChatMessage(appId, "工作流执行完成", ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
+                }
+                log.info("工作流模式：实际输出已保存到聊天历史，appId: {}, 输出长度: {}", appId, actualResponse.length());
+            }).doOnError(error -> {
+                // 工作流失败时保存已收集的输出加上错误信息
+                String partialOutput = realWorkflowOutput.toString();
+                String errorResponse = partialOutput + "\n执行失败：" + error.getMessage();
+                chatHistoryService.addChatMessage(appId, errorResponse, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
+                log.error("工作流模式：错误输出已保存到聊天历史，appId: {}, 错误: {}", appId, error.getMessage());
+            });
         } else {
             // 传统模式：调用 AI 生成代码（流式）
             codeStream = aiCodeGeneratorFacade.generateAndSaveCodeStream(message, codeGenTypeEnum, appId);

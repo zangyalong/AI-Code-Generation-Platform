@@ -31,8 +31,15 @@ public class CodeGeneratorNode {
             // 获取 appId
             Long appId = context.getAppId();
             Flux<String> codeStream = codeGeneratorFacade.generateAndSaveCodeStream(userMessage, generationType, appId);
-            codeStream.blockLast(Duration.ofMinutes(10));
 
+            try {
+                // 使用超时机制并处理可能的超时异常
+                codeStream.blockLast(Duration.ofMinutes(5));
+                log.info("代码生成流正常完成");
+            } catch (Exception e) {
+                log.error("代码生成流异常或超时: {}", e.getMessage(), e);
+                // 即使流异常，也继续工作流，因为代码可能已经部分生成
+            }
             String generatedCodeDir = String.format("%s/%s_%s", AppConstant.CODE_OUTPUT_ROOT_DIR,
                     generationType.getValue(), appId);
             log.info("AI 代码生成完成，生成目录: {}", generatedCodeDir);

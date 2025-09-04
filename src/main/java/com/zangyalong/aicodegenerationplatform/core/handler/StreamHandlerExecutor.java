@@ -22,9 +22,9 @@ public class StreamHandlerExecutor {
     private JsonMessageStreamHandler jsonMessageStreamHandler;
 
     /**
+     * @param originFlux         原始流
      * 创建流处理器并处理聊天历史记录
      *
-     * @param originFlux         原始流
      * @param chatHistoryService 聊天历史服务
      * @param appId              应用ID
      * @param loginUser          登录用户

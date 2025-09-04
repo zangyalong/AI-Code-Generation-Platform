@@ -151,7 +151,7 @@ public class AiCodeGeneratorServiceFactory {
                         .chatMemoryProvider(memoryId -> chatMemory)
                         .tools(toolManager.getAllTools())
                         .inputGuardrails(new PromptSafetyInputGuardrail())  // 添加输入护轨
-                        .outputGuardrails(new RetryOutputGuardrail())       // 输出护轨
+                        //.outputGuardrails(new RetryOutputGuardrail())       // 输出护轨 - 注释掉防止流式输出被缓存
                         //.outputGuardrailsConfig(outputGuardrailsConfig)
                         .maxSequentialToolsInvocations(20)  // 最多连续调用 20 次工具
                         .hallucinatedToolNameStrategy(toolExecutionRequest -> ToolExecutionResultMessage.from(
@@ -167,7 +167,7 @@ public class AiCodeGeneratorServiceFactory {
                         .streamingChatModel(openAiStreamingChatModel)
                         .chatMemory(chatMemory)
                         .inputGuardrails(new PromptSafetyInputGuardrail())  // 添加输入护轨
-                        .outputGuardrails(new RetryOutputGuardrail())       // 输出护轨
+                        //.outputGuardrails(new RetryOutputGuardrail())       // 输出护轨
                         //.outputGuardrailsConfig(outputGuardrailsConfig)
                         .maxSequentialToolsInvocations(20)  // 最多连续调用 20 次工具
                         .build();
