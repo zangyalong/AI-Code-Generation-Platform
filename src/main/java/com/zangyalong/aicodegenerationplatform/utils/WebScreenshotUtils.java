@@ -144,10 +144,12 @@ public class WebScreenshotUtils {
      */
     private static WebDriver initChromeDriver(int width, int height) {
         try {
-            // 自动管理 ChromeDriver
-            WebDriverManager.chromedriver().setup();
             // 配置 Chrome 选项
             ChromeOptions options = new ChromeOptions();
+            
+            // 指定Chrome浏览器的路径
+            options.setBinary("/usr/bin/google-chrome");
+            
             // 无头模式
             options.addArguments("--headless");
             // 禁用GPU（在某些环境下避免问题）
@@ -160,18 +162,26 @@ public class WebScreenshotUtils {
             options.addArguments(String.format("--window-size=%d,%d", width, height));
             // 禁用扩展
             options.addArguments("--disable-extensions");
+            // 禁用图片加载（提升性能）
+            options.addArguments("--disable-images");
             // 设置用户代理
-            options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
-            // 创建驱动
+            options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.7339.80 Safari/537.36");
+            
+            // 手动设置ChromeDriver路径，完全避免WebDriverManager
+            System.setProperty("webdriver.chrome.driver", "/usr/local/bin/chromedriver");
+            
+            // 创建驱动（不使用WebDriverManager）
             WebDriver driver = new ChromeDriver(options);
             // 设置页面加载超时
             driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
             // 设置隐式等待
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            
+            log.info("Chrome浏览器驱动初始化成功");
             return driver;
         } catch (Exception e) {
             log.error("初始化 Chrome 浏览器失败", e);
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "初始化 Chrome 浏览器失败");
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "初始化 Chrome 浏览器失败: " + e.getMessage());
         }
     }
 

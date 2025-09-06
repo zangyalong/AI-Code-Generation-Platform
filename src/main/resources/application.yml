@@ -17,13 +17,13 @@ spring:
     redis:
       host: localhost
       port: 6379
-      database: 1
+      database: 0
       password:
       ttl: 3600
   profiles:
     active: local
 server:
-  port: 8123
+  port: 8124
   servlet:
     context-path: /api
     # cookie 30 天过期
@@ -40,3 +40,20 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+
+# 日志配置
+logging:
+  level:
+    root: WARN                    # 根日志级别设置为WARN
+    com.zangyalong: INFO          # 项目包日志级别为INFO
+    org.springframework: WARN     # Spring框架日志级别为WARN
+    com.mybatisflex: WARN         # MyBatis日志级别为WARN
+    org.apache.http: WARN         # HTTP客户端日志级别为WARN
+    dev.langchain4j: WARN         # LangChain4j日志级别为WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/app.log            # 日志文件路径
+    max-size: 10MB                # 单个日志文件最大10MB
+    max-history: 30               # 保留30天的日志

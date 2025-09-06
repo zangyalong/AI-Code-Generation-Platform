@@ -125,7 +125,7 @@ public class CodeGenWorkflow {
             WorkflowContext currentContext = WorkflowContext.getContext(step.state());
             if (currentContext != null) {
                 finalContext = currentContext;
-                log.info("当前步骤上下文: {}", currentContext);
+                //log.info("当前步骤上下文: {}", currentContext);
             }
             stepCounter++;
         }
@@ -163,7 +163,7 @@ public class CodeGenWorkflow {
                                     "stepNumber", stepCounter,
                                     "currentStep", currentContext.getCurrentStep()
                             )));
-                            log.info("当前步骤上下文: {}", currentContext);
+                            //log.info("当前步骤上下文: {}", currentContext);
                         }
                         stepCounter++;
                     }

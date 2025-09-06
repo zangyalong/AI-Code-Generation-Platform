@@ -54,7 +54,7 @@ public class WorkflowApp {
             // 显示当前状态
             WorkflowContext currentContext = WorkflowContext.getContext(step.state());
             if (currentContext != null) {
-                log.info("当前步骤上下文: {}", currentContext);
+                //log.info("当前步骤上下文: {}", currentContext);
             }
             stepCounter++;
         }

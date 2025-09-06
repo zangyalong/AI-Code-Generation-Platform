@@ -34,3 +34,5 @@ build/
 ### VS Code ###
 .vscode/
 CLAUDE.md
+src/main/resources/application-prod.yml
+*.yml

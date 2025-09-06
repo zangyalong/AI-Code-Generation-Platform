@@ -7,13 +7,14 @@
 ### 预期实现的 4 大核心能力
 
 1）智能代码生成：用户输入需求描述，AI 自动分析并选择合适的生成策略，通过工具调用生成代码文件，采用流式输出让用户实时看到 AI 的执行过程。
-
+![img.png](src/main/resources/static/pic/img.png)
 2）可视化编辑：生成的应用将实时展示，可以进入编辑模式，自由选择网页元素并且和 AI 对话来快速修改页面，直到满意为止。
-
+![img_1.png](src/main/resources/static/pic/img_1.png)
 3）一键部署分享：可以将生成的应用一键部署到云端并自动截取封面图，获得可访问的地址进行分享，同时支持完整项目源码下载。
-
+![img_2-1.png](src/main/resources/static/pic/img_2-1.png)
 4）企业级管理：提供用户管理、应用管理、系统监控、业务指标监控等后台功能，管理员可以设置精选应用、监控 AI 调用情况和系统性能。
-
+![img_2.png](src/main/resources/static/pic/img_2.png)
+![img_3.png](src/main/resources/static/pic/img_3.png)
 ## 第一次提交 init - 基础代码和依赖整理
 
 ## 第二次提交 用户模块
@@ -116,3 +117,6 @@
     2、Prompt 安全审查 - 通过longchain4j的护轨机制实现输入内容护轨
     3、通过输出护轨与重试机制保证系统的稳定性
     4、通过再AiService中设置参数限制调用工具次数上限
+
+## 第十七次提交 上线运行-Release0.0.1
+在服务器中部署前端、后端、Redis、MySQL以及Node环境等运行环境，项目上线后可以正常运行
