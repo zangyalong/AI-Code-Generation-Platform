@@ -1,5 +1,7 @@
 # AI代码生成平台
 
+项目体验地址http://acgp.mingzang.online/
+
 ## 项目介绍
 
 这是一套以 **AI 开发实战 + 后端架构设计** 为核心的项目，基于 Spring Boot 3 + LangChain4j + Vue 3 的 **AI 代码生成平台**
