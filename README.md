@@ -1,6 +1,6 @@
 # AI代码生成平台
 
-项目体验地址http://acgp.mingzang.online/
+项目体验地址https://acgp.mingzang.online/
 
 ## 项目介绍
 
